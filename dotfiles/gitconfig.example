@@ -1,0 +1,12 @@
+[user]
+	name = YOUR NAME
+	email = YOUR_EMAIL@example.com
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[core]
+	editor = nano

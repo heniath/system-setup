@@ -1,0 +1,27 @@
+# Core command-line tools
+git
+curl
+wget
+tree
+htop
+tmux
+rsync
+unzip
+zip
+ca-certificates
+gnupg
+jq
+ripgrep
+fd-find
+
+# Development and diagnostics
+build-essential
+pkg-config
+shellcheck
+openssh-server
+net-tools
+iproute2
+dnsutils
+lm-sensors
+smartmontools
+ffmpeg

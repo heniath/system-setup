@@ -1,0 +1,11 @@
+# Keep long-running training sessions usable over intermittent SSH connections.
+set -g history-limit 50000
+set -g mouse on
+set -g status-interval 5
+set -g base-index 1
+setw -g pane-base-index 1
+set -g renumber-windows on
+
+# Familiar split bindings while preserving tmux defaults.
+bind | split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"

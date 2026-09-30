@@ -1,0 +1,62 @@
+# Secrets and credentials (examples with the .example suffix remain trackable)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*secret*
+*credentials*
+*token*
+auth.json
+credentials.json
+
+# SSH private material and host trust databases
+.ssh/
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+id_ecdsa
+id_ecdsa.*
+known_hosts
+authorized_keys
+
+# Shell and interactive histories
+.bash_history
+.zsh_history
+.python_history
+.lesshst
+
+# Conda installations and transient exports
+miniforge3/
+mambaforge/
+anaconda3/
+.conda/
+environments/*.tmp
+environments/*.explicit.tmp.txt
+
+# Python, test, and notebook caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Editors and operating-system junk
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+tmp/
+cache/

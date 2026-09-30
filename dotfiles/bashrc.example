@@ -1,0 +1,14 @@
+# Optional workstation additions for ~/.bashrc
+alias ll='ls -lah'
+alias nv='nvidia-smi'
+alias gpu='watch -n 1 nvidia-smi'
+alias dfh='df -h'
+
+export PROJECTS="$HOME/Projects"
+export DATASETS="$HOME/Datasets"
+export EXPERIMENTS="$HOME/Experiments"
+export MODELS="$HOME/Models"
+
+# Miniforge activation is optional. Prefer `conda init` only after reviewing its
+# changes, or source the hook explicitly when needed:
+# source "$HOME/miniforge3/etc/profile.d/conda.sh"
