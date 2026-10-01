@@ -2,8 +2,9 @@
 set -euo pipefail
 
 INSTALL_DIR="${MINIFORGE_HOME:-$HOME/miniforge3}"
-RELEASE_BASE='https://github.com/conda-forge/miniforge/releases/latest/download'
-INSTALLER_NAME='Miniforge3-Linux-x86_64.sh'
+MINIFORGE_VERSION="${MINIFORGE_VERSION:-26.7.2-0}"
+RELEASE_BASE="https://github.com/conda-forge/miniforge/releases/download/$MINIFORGE_VERSION"
+INSTALLER_NAME="Miniforge3-$MINIFORGE_VERSION-Linux-x86_64.sh"
 INSTALLER_URL="$RELEASE_BASE/$INSTALLER_NAME"
 CHECKSUM_URL="$INSTALLER_URL.sha256"
 

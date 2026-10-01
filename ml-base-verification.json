@@ -1,0 +1,238 @@
+{
+  "python": "3.11.16",
+  "checks": {
+    "import torch": {
+      "passed": true,
+      "detail": "2.11.0+cu128"
+    },
+    "import torchvision": {
+      "passed": true,
+      "detail": "0.26.0+cu128"
+    },
+    "import torchaudio": {
+      "passed": true,
+      "detail": "2.11.0+cu128"
+    },
+    "import timm": {
+      "passed": true,
+      "detail": "1.0.30"
+    },
+    "import numpy": {
+      "passed": true,
+      "detail": "2.4.6"
+    },
+    "import scipy": {
+      "passed": true,
+      "detail": "1.17.1"
+    },
+    "import pandas": {
+      "passed": true,
+      "detail": "3.0.6"
+    },
+    "import sklearn": {
+      "passed": true,
+      "detail": "1.9.1"
+    },
+    "import PIL": {
+      "passed": true,
+      "detail": "12.3.0"
+    },
+    "import cv2": {
+      "passed": true,
+      "detail": "5.0.0.93"
+    },
+    "import albumentations": {
+      "passed": true,
+      "detail": "2.0.8+opencv.gui"
+    },
+    "import matplotlib": {
+      "passed": true,
+      "detail": "3.11.2"
+    },
+    "import tqdm": {
+      "passed": true,
+      "detail": "4.70.1"
+    },
+    "import einops": {
+      "passed": true,
+      "detail": "0.8.2"
+    },
+    "import transformers": {
+      "passed": true,
+      "detail": "5.18.0"
+    },
+    "import datasets": {
+      "passed": true,
+      "detail": "5.0.1"
+    },
+    "import accelerate": {
+      "passed": true,
+      "detail": "1.15.0"
+    },
+    "import huggingface_hub": {
+      "passed": true,
+      "detail": "1.33.0"
+    },
+    "import safetensors": {
+      "passed": true,
+      "detail": "0.8.0"
+    },
+    "import tokenizers": {
+      "passed": true,
+      "detail": "0.23.2"
+    },
+    "import sentencepiece": {
+      "passed": true,
+      "detail": "0.2.2"
+    },
+    "import triton": {
+      "passed": true,
+      "detail": "3.6.0"
+    },
+    "import mamba_ssm": {
+      "passed": true,
+      "detail": "2.3.2.post1"
+    },
+    "import causal_conv1d": {
+      "passed": true,
+      "detail": "1.7.0"
+    },
+    "import ninja": {
+      "passed": true,
+      "detail": "1.13.2"
+    },
+    "import jupyter": {
+      "passed": true,
+      "detail": "1.1.1"
+    },
+    "import jupyterlab": {
+      "passed": true,
+      "detail": "4.6.4"
+    },
+    "import ipykernel": {
+      "passed": true,
+      "detail": "7.4.0"
+    },
+    "import tensorboard": {
+      "passed": true,
+      "detail": "2.21.0"
+    },
+    "import wandb": {
+      "passed": true,
+      "detail": "0.30.0"
+    },
+    "import rich": {
+      "passed": true,
+      "detail": "15.0.0"
+    },
+    "import kaggle": {
+      "passed": true,
+      "detail": "2.2.4"
+    },
+    "import gdown": {
+      "passed": true,
+      "detail": "6.4.1"
+    },
+    "import requests": {
+      "passed": true,
+      "detail": "2.34.2"
+    },
+    "import wget": {
+      "passed": true,
+      "detail": "3.2"
+    },
+    "import IPython": {
+      "passed": true,
+      "detail": "9.17.1"
+    },
+    "import pytest": {
+      "passed": true,
+      "detail": "9.1.1"
+    },
+    "import black": {
+      "passed": true,
+      "detail": "26.5.1"
+    },
+    "ruff": {
+      "passed": true,
+      "detail": "ruff 0.16.9"
+    },
+    "CUDA tensor": {
+      "passed": true,
+      "detail": "CUDA matrix multiplication and backward matched expectations"
+    },
+    "computer vision": {
+      "passed": true,
+      "detail": "torchvision CUDA NMS, timm forward, OpenCV (GUI:                           QT5), Albumentations"
+    },
+    "Hugging Face": {
+      "passed": true,
+      "detail": "tiny Transformer GPU forward and in-memory dataset, no downloads"
+    },
+    "causal-conv1d CUDA": {
+      "passed": true,
+      "detail": "native CUDA convolution matched reference; backward passed"
+    },
+    "Mamba CUDA": {
+      "passed": true,
+      "detail": "Mamba and Mamba2 GPU forward/backward (including Triton kernels)"
+    },
+    "Jupyter kernel": {
+      "passed": true,
+      "detail": "Python (ml-base)"
+    },
+    "pip check": {
+      "passed": true,
+      "detail": "No broken requirements found."
+    }
+  },
+  "versions": {
+    "torch": "2.11.0+cu128",
+    "torchvision": "0.26.0+cu128",
+    "torchaudio": "2.11.0+cu128",
+    "timm": "1.0.30",
+    "numpy": "2.4.6",
+    "scipy": "1.17.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "pillow": "12.3.0",
+    "opencv-python": "5.0.0.93",
+    "albumentations": "2.0.8+opencv.gui",
+    "matplotlib": "3.11.2",
+    "tqdm": "4.70.1",
+    "einops": "0.8.2",
+    "transformers": "5.18.0",
+    "datasets": "5.0.1",
+    "accelerate": "1.15.0",
+    "huggingface-hub": "1.33.0",
+    "safetensors": "0.8.0",
+    "tokenizers": "0.23.2",
+    "sentencepiece": "0.2.2",
+    "triton": "3.6.0",
+    "mamba-ssm": "2.3.2.post1",
+    "causal-conv1d": "1.7.0",
+    "ninja": "1.13.2",
+    "jupyter": "1.1.1",
+    "jupyterlab": "4.6.4",
+    "ipykernel": "7.4.0",
+    "tensorboard": "2.21.0",
+    "wandb": "0.30.0",
+    "rich": "15.0.0",
+    "kaggle": "2.2.4",
+    "gdown": "6.4.1",
+    "requests": "2.34.2",
+    "wget": "3.2",
+    "ipython": "9.17.1",
+    "pytest": "9.1.1",
+    "black": "26.5.1"
+  },
+  "pytorch": "2.11.0+cu128",
+  "cuda_runtime": "12.8",
+  "gpu": "NVIDIA GeForce RTX 5060 Ti",
+  "capability": [
+    12,
+    0
+  ],
+  "jupyter_kernel": "Python (ml-base)",
+  "passed": true
+}

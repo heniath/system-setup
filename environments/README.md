@@ -1,38 +1,29 @@
 # Conda environments
 
-The environment hierarchy is intentionally small:
+`base` contains environment-management tools only. `ml-base` is the shared,
+validated Python 3.11 research environment. Ordinary projects can use it directly;
+incompatible or legacy repositories can use a separate environment.
 
-```text
-base                 Conda/environment management only
-ml-base              Stable, version-pinned common ML stack (golden environment)
-project environments Cloned from ml-base or built independently
-```
+Run `../setup-ml-base.sh` or `make ml-env` from the repository root. The root
+`environment.yml` pins the Conda bootstrap and environment-local CUDA compiler;
+`requirements-ml-base.txt` pins the Python distributions. The script installs
+the matching PyTorch CUDA wheels and builds Mamba/native extensions in order.
+`ml-base.yml` mirrors the root bootstrap for existing references. Creating only
+this YAML does not install the complete pip/native research stack.
 
-> Never experiment directly inside `base` or `ml-base`.
+Run `python ../verify-ml-base.py` inside the activated environment. It checks
+imports, dependency consistency, Jupyter registration, and real GPU operations.
+See the root README for GUI OpenCV packaging, updates, and remote Jupyter use.
 
-Create the golden environment with `scripts/create-ml-env.sh`, then clone it for
-a project:
-
-```bash
-conda create -n my-project --clone ml-base
-conda activate my-project
-```
-
-`ml-base.yml` is a portable, human-maintained specification. It describes direct
-dependencies and can be solved across compatible systems, so transitive versions
-may change. After validating the environment on the target workstation, produce
-an exact, platform-specific artifact:
+After intentional validation, export Conda builds separately from pip versions:
 
 ```bash
 conda activate ml-base
 conda list --explicit > environments/ml-base-lock.txt
+python -m pip list --format=freeze > requirements-ml-base.txt
 ```
 
-That explicit file captures exact package builds and URLs for reliable recreation
-on the same platform. Review it before committing it. It is less portable than
-the YAML and should be regenerated only after intentional environment changes.
-
-PyTorch and its CUDA runtime are deliberately absent from the starter YAML.
-After the driver is verified, use the official PyTorch selector/compatibility
-matrix and record the chosen versions here. Add `torch`, `torchvision`, `timm`,
-`transformers`, and OpenCV only when their compatibility has been decided.
+The Conda lock records exact package URLs/builds for Linux x86_64; it does not
+capture pip packages. The requirements file records pip distributions, including
+the two GUI OpenCV metadata variants built by the repository helper. Review
+exports and never commit credentials or local secret-bearing package URLs.

@@ -1,0 +1,5 @@
+# Keep the coordinated GPU stack fixed during all subsequent pip installs.
+torch==2.11.0+cu128
+torchvision==0.26.0+cu128
+torchaudio==2.11.0+cu128
+triton==3.6.0

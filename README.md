@@ -99,34 +99,181 @@ base
     Conda/environment management only
 
 ml-base
-    Stable, version-pinned common ML stack
+    Stable, version-pinned general-purpose research stack
 
 project environments
-    Cloned from ml-base or created independently
-    Project-specific dependencies go here
+    Used when a repository has genuinely incompatible dependencies
 ```
 
-> Never experiment directly inside `base` or `ml-base`.
+Keep `base` for environment management. Use `ml-base` for ordinary research;
+review and validate dependency changes before altering the shared environment.
 
-`ml-base` is a golden environment, not a day-to-day scratch space. Clone it with:
+When isolation is needed, clone the working environment with:
 
 ```bash
 conda create -n <project-name> --clone ml-base
 ```
 
-The portable `environments/ml-base.yml` expresses deliberate direct dependencies.
-It omits PyTorch, torchvision, CUDA runtime, timm, transformers, and OpenCV until
-versions are selected against the verified driver and official compatibility
-guidance. After validation, capture exact platform-specific builds with:
+`ml-base` is now the general-purpose research environment described below.
+Use it directly for compatible ML, CV, Hugging Face, and Mamba projects. Keep
+Conda `base` minimal. Create a separate project environment when a repository
+requires incompatible dependencies; cloning is optional for ordinary projects.
+The root `environment.yml` pins the Conda bootstrap and CUDA development tools;
+`requirements-ml-base.txt` records exact Python distributions after validation.
+`environments/ml-base.yml` mirrors the root bootstrap for compatibility.
+The ordered installer is `setup-ml-base.sh`, also used by `make ml-env`.
+After intentional validation, capture exact platform-specific Conda builds with:
 
 ```bash
 conda activate ml-base
 conda list --explicit > environments/ml-base-lock.txt
 ```
 
-The YAML is readable and portable but allows a solver to choose transitive builds.
-The explicit export is exact and reproducible on the same platform, but less
-portable. Review and commit both when the stack becomes stable.
+The explicit Conda export covers Conda packages only; pip packages require the
+separate requirements file. Review both before committing.
+
+## General-purpose ML environment
+
+This workstation uses Python 3.11 and an explicitly matched PyTorch 2.11.0,
+torchvision 0.26.0, torchaudio 2.11.0 stack with CUDA 12.8 wheels and Triton 3.6.0.
+The RTX 5060 Ti is Blackwell (`sm_120`). The CUDA 13.2 label in `nvidia-smi`
+describes driver capability; PyTorch uses its own CUDA 12.8 runtime. These
+choices follow the [official PyTorch version table](https://pytorch.org/get-started/previous-versions/).
+PyTorch 2.11 is the latest coordinated published trio including the requested
+torchaudio; Mamba compatibility is not the reason for selecting it.
+
+The environment includes the scientific/CV stack, Hugging Face libraries,
+Mamba, Jupyter, experiment tracking, Kaggle/download clients, and development
+tools. Exact installed versions are in `requirements-ml-base.txt`.
+
+Create it on Ubuntu x86_64 with a working NVIDIA driver, Git, GCC/G++, and Conda:
+
+```bash
+cd ~/system-setup
+./scripts/install-miniforge.sh  # only if Conda is missing; verifies SHA-256
+./setup-ml-base.sh
+```
+
+The installer creates only the named environment and refuses to modify an
+existing environment automatically. It leaves `base`, drivers, SSH, system
+CUDA, and shell startup files alone. The `environment.yml` file alone installs
+the Conda bootstrap; the script completes the ordered pip and native-build
+stages. Allow time and disk space for CUDA wheels and native compilation.
+
+Activate and verify:
+
+```bash
+source ~/miniforge3/etc/profile.d/conda.sh  # if conda is not initialized
+conda activate ml-base
+python ~/system-setup/verify-ml-base.py
+python -c 'import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available(), torch.cuda.get_device_name(0))'
+```
+
+The automated check tests imports, real CUDA matrix multiplication and backward,
+torchvision CUDA NMS, timm and Transformer GPU forwards, native causal-conv1d
+against its reference, Mamba/Mamba2 GPU forward/backward (including Triton),
+GUI OpenCV build support, the Jupyter kernel, and `pip check`. No model downloads
+or cloud logins are needed. A JSON report can be written with
+`python verify-ml-base.py --report ml-base-verification.json`.
+
+### Mamba and native CUDA extensions
+
+`mamba-ssm` 2.3.2.post1 and `causal-conv1d` 1.7.0 are built locally against this
+exact Python/PyTorch ABI. Their published wheels do not cover PyTorch 2.11.
+The [released Mamba sources](https://github.com/state-spaces/mamba/tree/v2.3.2.post1)
+and [causal-conv1d sources](https://github.com/Dao-AILab/causal-conv1d/tree/v1.7.0)
+include Blackwell targets when compiled with CUDA 12.8 or newer.
+
+Only the environment-local NVIDIA CUDA compiler and development headers are
+added via Conda, because these native extensions require them. A small CUDA
+development runtime is pulled in with those headers; CUDA math libraries and
+cuDNN come from the PyTorch wheels. No full system CUDA toolkit is installed.
+The pip `cuda-toolkit` distribution selected by torch is a small runtime
+dependency selector, not a system toolkit installation.
+
+The installer records CUDA include/library paths as environment-specific Conda
+variables, so activation supplies them for later native builds, and
+limits compilation to two concurrent build jobs. It builds from the pinned
+released sources, with build isolation disabled so the installed GPU torch is
+used. Changing PyTorch requires rebuilding and retesting both native extensions.
+The full Mamba package also needs its pinned TileLang/TVM/Quack dependencies;
+these are recorded with the rest of the environment.
+
+### OpenCV GUI support
+
+Use the GUI-enabled `opencv-python` package so `cv2.imshow` is available when a
+graphical display is available. An ordinary SSH session does not itself provide
+a display; remote GUI use needs suitable display forwarding or a desktop session.
+
+Upstream Albumentations 2.0.8 and Albucore 0.0.24 require
+`opencv-python-headless` in their pip metadata. Installing GUI and headless
+OpenCV together would overwrite the same `cv2` files. The script
+`scripts/build-albumentations-gui.py` downloads checksum-pinned official wheels
+and changes only the OpenCV dependency to `opencv-python`, adding the explicit
+local version suffix `+opencv.gui`. It preserves and compares the original
+Python code byte-for-byte and regenerates wheel records. These two local wheels
+are rebuilt automatically; keep this helper with the requirements file.
+
+### Jupyter and remote use
+
+The installed kernel is **Python (ml-base)**, with internal name `ml-base`:
+
+```bash
+conda activate ml-base
+python -m ipykernel install --user --name ml-base --display-name 'Python (ml-base)'
+jupyter lab --no-browser --ip=127.0.0.1 --port=8888
+```
+
+For access from your laptop, create an SSH tunnel, then open the localhost URL
+with the token printed by Jupyter:
+
+```bash
+ssh -L 8888:127.0.0.1:8888 heniath@100.69.174.24
+```
+
+Authenticate Kaggle, Hugging Face, and W&B separately when using their online
+services. Keep tokens, credential files, notebook access tokens, and datasets
+out of this repository. Import checks do not verify account authorization.
+
+### Safe updates and reproducibility
+
+Avoid indiscriminate `pip install -U` or installing an unfamiliar repository's
+requirements over the shared stack. Inspect requested dependencies first. To
+test a change independently, create a candidate from the recorded files:
+
+```bash
+ML_BASE_ENV_NAME=ml-base-candidate ./setup-ml-base.sh
+conda activate ml-base-candidate
+python verify-ml-base.py --kernel-name ml-base-candidate
+```
+
+Review changed constraints, test representative projects and GPU kernels, then
+adopt and export the deliberate change. Never solve a Mamba or legacy repository
+conflict by silently replacing the shared torch/CUDA/Triton stack. Unusual or
+legacy repositories may still require their own isolated environment; no single
+environment can guarantee compatibility with all future projects.
+
+After a successful intentional update:
+
+```bash
+conda activate ml-base
+python verify-ml-base.py --report ml-base-verification.json
+python -m pip list --format=freeze > requirements-ml-base.txt
+conda list --explicit > environments/ml-base-lock.txt
+conda env export --no-builds > /tmp/ml-base-full-export.yml
+git diff --check
+git diff
+```
+
+Keep the curated `environment.yml` bootstrap in sync with the Conda export.
+`pip list --format=freeze` records portable version pins instead of local wheel
+paths; GUI-adjusted wheels require the helper above. PyTorch CUDA wheel pins
+require the official CUDA 12.8 index used by `setup-ml-base.sh`. Native wheel
+artifacts are cached under `~/.cache/ml-base-wheels/`; source rebuilding is the
+default so a fresh installation never assumes another machine's torch ABI.
+The explicit Conda lock is Linux/platform-specific. Review exports for secrets
+before committing. The snapshot records the validated combination, not a promise
+that every upstream release will remain available forever.
 
 ## Workspace directory policy
 
